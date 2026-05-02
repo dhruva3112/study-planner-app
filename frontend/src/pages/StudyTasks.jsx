@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-const socket = io(import.meta.env.VITE_SOCKET_URL || "http://localhost:5000");import api from "../api";
+import { io } from "socket.io-client";
+import api from "../api";
 
 function StudyTasks() {
     const [tasks, setTasks] = useState([]);
@@ -43,7 +44,7 @@ function StudyTasks() {
     }, []);
 
     useEffect(() => {
-        const socket = io("http://localhost:5000");
+        const socket = io(import.meta.env.VITE_SOCKET_URL || "http://localhost:5000");
 
         socket.on("studyTask:created", (newTask) => {
             if (newTask.user && currentUser?._id && newTask.user !== currentUser._id) {
@@ -280,10 +281,7 @@ function StudyTasks() {
                                     </div>
 
                                     <div className="task-meta">
-                                        <span>
-                                            Course: {task.course?.name || "No course"}
-                                        </span>
-
+                                        <span>Course: {task.course?.name || "No course"}</span>
                                         <span>
                                             Due:{" "}
                                             {task.dueDate
@@ -294,7 +292,10 @@ function StudyTasks() {
 
                                     <div className="item-actions">
                                         <button onClick={() => handleEdit(task)}>Edit</button>
-                                        <button className="danger" onClick={() => handleDelete(task._id)}>
+                                        <button
+                                            className="danger"
+                                            onClick={() => handleDelete(task._id)}
+                                        >
                                             Delete
                                         </button>
                                     </div>
